@@ -16,6 +16,7 @@ param.regEpoch = 1; % number, seconds
 param.isDeltaUsed = 1; % flag whether delta value used
 param.deltaToDelete = 0.0040; % delta value to consider
 param.startEventPattern = regexpPattern('S\s(\s)?\d(\d)?');
+param.endEventPattern = regexpPattern('S\d\d\d');
 param.resampleRate = 250;
 % ensure to specify for .bdf and .edf file types
 % numOfChannels = 64;
@@ -43,11 +44,10 @@ fullReport = atclv2_masterSelector(param,funct,...
 %% TABULATE EVENTS (IF NEEDED)
 % Call the event name tabulation function if needed. 
 eventFileName = 'PVT_event_codes.json';
-endEvents = regexpPattern('S\d\d\d');
 indexOfEvents = 10;
 
 if eventTabFlag
-    atclv2_util_event_tabulation(fullReport, eventFileName, indexOfEvents, param.startEventPattern, endEvents);
+    atclv2_util_event_tabulation(fullReport, eventFileName, indexOfEvents, param.startEventPattern, param.endEventPattern);
 end
 
 %% END OF PIPELINE
