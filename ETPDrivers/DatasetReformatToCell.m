@@ -4,6 +4,7 @@
 % Import utilities to convert to cell array
 addpath(strcat(pwd, '/../ETPAlgorithm/utilities'));
 
+% TODO: Place all dataset and task names into a list and iterate through them
 datasetName = 'PVT';
 inputFolder = strcat(pwd, '/../Datasets/', datasetName, '/Rest/EpochedData/');
 outputFolder = strcat(pwd, '/../Datasets/', datasetName, '/Rest/CellData/');
