@@ -2,19 +2,21 @@
 % Run this file from EEGCognitionPrediction/
 
 % Import utilities to convert to cell array
-addpath(strcat(pwd, '/../ETPAglorithm/utilities'));
+addpath(strcat(pwd, '/../ETPAlgorithm/utilities'));
 
 datasetName = 'PVT';
-inputFolder = strcat(pwd, '/../Datasets/', datasetName, '/Rest');
+inputFolder = strcat(pwd, '/../Datasets/', datasetName, '/Rest/EpochedData/');
+outputFolder = strcat(pwd, '/../Datasets/', datasetName, '/Rest/CellData/');
 
-files = dir(inputFolder)
+files = dir(inputFolder);
 for i = 1:length(files)
-	fileName = files(i).name
+	fileName = files(i).name;
 	if(endsWith(fileName, 'DATA.mat'))
 		filePath = strcat(inputFolder, fileName);
 		EEG = load(filePath);
-		cellData = convertToCellArray(EEG.data);
-		cellFileName = strrep(filePath, 'DATA.mat', 'DATA_CELL.mat');
-		save(cellFileName, 'cellData');
+		cellData = ConvertToCellArray(EEG.data, 0); % 0 represents we're not removing any points
+		cellFileName = strrep(fileName, 'DATA.mat', 'CELLDATA.mat');
+		cellFilePath = strcat(outputFolder, cellFileName);
+		save(cellFilePath, 'cellData');
 	end
 end
