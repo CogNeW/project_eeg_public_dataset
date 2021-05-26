@@ -7,12 +7,13 @@
 %% PREPROCESSING
            
 % PATHS
-param.inFolder = 'open_source_b_rereferenced/PVT/task';% string, folder name
-param.outFolder = 'open_source_c_epoched/PVT/rest'; % string, folder name
+param.inFolder = 'open_source_b_rereferenced/PVT/rest';% string, folder name
+param.outFolder = 'open_source_c_epoched/PVT/true_rest'; % string, folder name
 param.fileType = '**/*.set'; % string, file extension
 
 % GENERAL PARAMETERS
 param.regEpoch = 1; % number, seconds
+param.isRestData = 0; % flag to determine whether epoching will occur
 param.startEpochFlag = 0; % where data is epoched with respect to start
 param.epochTag = 'REST'; % name for file suffix to use
 param.epochInterval = [0 1]; % interval to epoch over
