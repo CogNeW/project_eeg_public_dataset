@@ -6,12 +6,11 @@
 
 %% PREPROCESSING
 % Reads in parameters from a separate JSON file
-param = jsondecode(fileread('dataset_common_settings.json')).ALPH.param;
+param = jsondecode(fileread('dataset_common_settings.json')).B3.param;
 
 % GENERAL PARAMETERS - flags whether to apply additional steps on data
-renamingFlag = 1; % whether events need to be renamed
-param.biosigRefChan = (1:param.numOfChannels); % reference channels to consider for averaging
-eventTabFlag = 0; % whether to run tabulation at end
+renamingFlag = 0; % whether events need to be renamed
+eventTabFlag = 1; % whether to run tabulation at end
 
 % CALL TO FUNCTION
 funct = {
@@ -21,6 +20,11 @@ funct = {
     @atclv2_step_count_events
 	};
 
+% reference channels to consider for averaging if its an edf or bdf file
+if strcmp(param.fileType, '**/*.edf') || strcmp(param.fileType, '**/*.bdf')
+    param.biosigRefChan = (1:param.numOfChannels); 
+end
+    
 % whether to add renaming step to avoid having it applied to all datasets
 if renamingFlag
     funct = [{@atclv2_step_renaming} funct];
