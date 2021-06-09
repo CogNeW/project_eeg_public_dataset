@@ -1,6 +1,6 @@
 % This script will take random samples from Rest Data (500ms and 1000ms) to test
 % if window lengths are issues are due to a lack of samples.
-% This script attempts to fix the issue from TrainRandomSampleRest.m by
+% This script attempts to fix the issue from a previous run by
 % sampling 500ms blocks for training purposes and storing them in a
 % cell array, and then sampling 500ms block for validation that are not
 % necessarily adjacent to the train blocks.
