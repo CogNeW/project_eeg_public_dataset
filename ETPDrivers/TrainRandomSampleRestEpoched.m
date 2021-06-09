@@ -6,6 +6,8 @@
 % necessarily adjacent to the train blocks.
 
 % Import utilities to convert to cell array
+% Should be run from EEGCognitionPrediction root folder with access to
+% ETPAlgorithm in the parent folder
 addpath(strcat(pwd, '/../ETPAlgorithm/'));
 addpath(strcat(pwd, '/../ETPAlgorithm/dependencies/fieldtrip-20201214'));
 addpath(strcat(pwd, '/../ETPAlgorithm/utilities'));
@@ -22,6 +24,7 @@ numEpochs = 200; % Number of epochs for rest and validation
 cellData = cell(numEpochs, 1);
 
 files = dir(inputFolder);
+% For each subject
 for i = 1:length(files)
 	fileName = files(i).name;
 	if(endsWith(fileName, 'REST_DATA.mat'))
@@ -34,6 +37,7 @@ for i = 1:length(files)
         halfSecond = fix(EEG.srate / 2);
         fullSecond = EEG.srate;
         range = 1:(len - halfSecond);
+        % Pull random samples
         for j = 1:numEpochs
             % Extract a random 500ms sample for a total of 1000 times
             randomStart = randsample(range, 1);
