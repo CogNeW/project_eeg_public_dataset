@@ -20,7 +20,7 @@ targetFreq = [8 13];
 targetChannel = "Oz";
 neighbors = ["O1", "O2", "POz", "PO3", "PO4"];
 
-numEpochs = 200; % Number of epochs for rest and validation
+numEpochs = 200; % Number of epochs for rest (which includes training and validation)
 cellData = cell(numEpochs, 1);
 
 files = dir(inputFolder);
@@ -46,9 +46,9 @@ for i = 1:length(files)
         end
         
         % Run ETP on epoched data
-        [cycleEstimate, actualPhases, actualPowers] = ETPTrainEpoch(cellData, 'TargetFreq', targetFreq, 'Electrodes', electrodes, 'SamplingRate', EEG.srate, ...
-            'Graph', false);
-        figure;
-        polarhistogram(wrapTo2Pi(actualPhases),36);
+%         [cycleEstimate, actualPhases, actualPowers] = ETPTrainEpoch(cellData, 'TargetFreq', targetFreq, 'Electrodes', electrodes, 'SamplingRate', EEG.srate, ...
+%             'Graph', false);
+%         figure;
+%         polarhistogram(wrapTo2Pi(actualPhases),36);
 	end
 end
