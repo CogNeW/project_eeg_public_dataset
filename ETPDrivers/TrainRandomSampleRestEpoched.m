@@ -32,30 +32,28 @@ cellAngles = cell(length(epochList), 1);
 means = zeros(1, length(epochList));
 sds = zeros(1, length(epochList));
 % For each subject
-for ei = 1:length(epochList)
-    allAnglesMean = [];
-    allAnglesSD = [];
-    allAngles = [];
-    numEpochs = epochList(ei);
-    for i = 1:length(files)
-        i
-        fileName = files(i).name;
-        if(endsWith(fileName, 'REST_DATA.mat'))
-            filePath = strcat(inputFolder, fileName);
-            EEG = load(filePath);
-            halfSecond = fix(EEG.srate / 2);
-            actualPhases = computeAngles(numEpochs, halfSecond, EEG, targetChannel, neighbors, targetFreq);
-            allAngles = [allAngles actualPhases];
-            allAnglesMean = [allAnglesMean circ_mean(actualPhases')];
-            allAnglesSD = [allAnglesSD circ_std(actualPhases')];
-        end
-    end
-    ei
-    cellAngles{ei} = allAngles;
-    means(ei) = mean(abs(allAnglesMean));
-    sds(ei) = mean(allAnglesSD);
 
+for i = 1:length(files)
+    i
+    fileName = files(i).name;
+    if(endsWith(fileName, 'REST_DATA.mat'))
+        filePath = strcat(inputFolder, fileName);
+        EEG = load(filePath);
+        halfSecond = fix(EEG.srate / 2);
+        for ei = 1:length(epochList)
+            ei
+            numEpochs = epochList(ei);
+            actualPhases = computeAngles(numEpochs, halfSecond, EEG, targetChannel, neighbors, targetFreq);
+            cellAngles{ei} = actualPhases;
+            means(ei) = circ_mean(actualPhases');
+            sds(ei) = circ_std(actualPhases');
+        end
+       
+        disp('test');
+        
+    end
 end
+
 
 disp('test');
 
