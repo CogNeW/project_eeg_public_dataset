@@ -62,6 +62,9 @@ end
 % returns the p-value of a paired, two-sided test for the null hypothesis 
 % that x – y comes from a distribution with zero median.
 signrank(restSNR, taskSNR)
+histogram(restSNR, 100, 'FaceColor', 'blue', 'FaceAlpha', .5);
+hold on;
+histogram(taskSNR, 100, 'FaceColor', 'red', 'FaceAlpha', .5);
 
 function snr = computeSNR(psd, freqs, lowFreq, highFreq)
 %     This function computes the signal to noise ratio for the frequency
