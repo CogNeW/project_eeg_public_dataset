@@ -25,7 +25,7 @@ targetChannel = "Oz";
 neighbors = ["O1", "O2", "Pz"];
 
 for i = 1:length(files)
-	fileName = files(i).name;
+    fileName = files(i).name;
  
     if(~ endsWith(fileName, '.mat'))
        continue; 
