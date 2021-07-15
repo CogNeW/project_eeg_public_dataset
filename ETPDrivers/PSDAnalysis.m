@@ -71,14 +71,17 @@ function snr = computeSNR(psd, freqs, lowFreq, highFreq)
 %     band from lowFreq to highFreq, based on the powerspectral densities,
 %     and given frequencies list.
 
+%     PSD has units of 10*log_10(mV^2 / Hz)
+%     In order to extract power, we will do 10^(PSD / 10)
+
     totalPower = 0;
     bandPower = 0;
     
     for i = 1:size(freqs, 1)
         if(lowFreq <= freqs(i) && freqs(i) <= highFreq)
-            bandPower = bandPower + abs(psd(i));
+            bandPower = bandPower + 10^(psd(i) / 10);
         end
-        totalPower = totalPower + abs(psd(i));
+        totalPower = totalPower + 10^(psd(i) / 10);
     end
 
     snr = bandPower / totalPower;
