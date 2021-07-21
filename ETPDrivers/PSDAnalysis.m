@@ -14,7 +14,7 @@ taskSNR = [];
 restSNR = [];
 
 for i = 1:length(files)
-	fileName = files(i).name;
+    fileName = files(i).name;
  
     if(~ endsWith(fileName, '.mat'))
        continue; 
