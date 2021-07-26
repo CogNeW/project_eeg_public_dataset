@@ -11,18 +11,23 @@
 %   Find the appropriate one in test
 %   Run test epoch, and get the predicted angles
 
+addpath(strcat(pwd, '/../ETPAlgorithm/utilities'));
+addpath(strcat(pwd, '/../ETPAlgorithm'));
 
-datasetName = 'PVT';
+datasetName = 'PVT_preprocessed';
 
-restIPIFolder = strcat(pwd, '/../FinalDatasets/', datasetName, '/outputs/ETPTrain/pseudorest/500/');
-taskFolder = strcat(pwd, '/../FinalDatasets/', datasetName, '/not_chan_reduced/task/mat/');
+restIPIFolder = strcat(pwd, '/../datasets/open_source_c_epoched/', datasetName, '/outputs/ETPTrain/pseudorest/500/');
+taskFolder = strcat(pwd, '/../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced/task/mat/');
+outputFolder = strcat(pwd, '/../datasets/open_source_c_epoched/', datasetName, '/outputs/ETPTest/task/500/');
 
 files = dir(restIPIFolder);
 
 targetChannel = "Oz";
 neighbors = ["O1", "O2", "Pz"];
+targetFreq = [8 13];
 
 for i = 1:length(files)
+    i
 	fileName = files(i).name;
  
     if(~ endsWith(fileName, '.mat'))
@@ -43,9 +48,16 @@ for i = 1:length(files)
     restIPIData = load(restFilePath).output;
     taskEEG = load(taskFilePath);
     
-    electrodes = ExtractElectrodes(EEG.chanlocs, targetChannel, neighbors);
+    electrodes = ExtractElectrodes(taskEEG.chanlocs, targetChannel, neighbors);
     cycleEstimate = restIPIData.cycleEstimate;
     cellData = ConvertToCellArray(taskEEG.data, 0);
     [accuracies, allPhases, allPowers] = computeEpochAccuracy(cellData, 250, targetFreq, cycleEstimate, electrodes);
+
+    output = struct('accuracies', accuracies, 'allPhases', allPhases, 'allPowers', allPowers);
+      
+    outputFileName = strrep(taskFileName, 'DATA', 'OUTPUT');
+    outputFilePath = strcat(outputFolder, outputFileName);
+
+    save(outputFilePath, 'output');
 
 end
