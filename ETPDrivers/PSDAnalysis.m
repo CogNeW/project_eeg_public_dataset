@@ -5,8 +5,8 @@
 
 datasetName = 'PVT';
 
-restFolder = strcat(pwd, '/../FinalDatasets/', datasetName, '/outputs/PSD/pseudorest/500/');
-taskFolder = strcat(pwd, '/../FinalDatasets/', datasetName, '/outputs/PSD/task/');
+restFolder = strcat(pwd, '/../datasets/open_source_c_epoched/', datasetName, '/outputs/PSD/pseudorest/500/');
+taskFolder = strcat(pwd, '/../datasets/open_source_c_epoched/', datasetName, '/outputs/PSD/task/');
 
 files = dir(restFolder);
 
