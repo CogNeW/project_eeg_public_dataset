@@ -6,7 +6,8 @@ addpath(strcat(pwd, '/../ETPAlgorithm/dependencies/fieldtrip-20201214'));
 addpath(strcat(pwd, '/../ETPAlgorithm/utilities'));
 addpath(strcat(pwd, '/../ETPAlgorithm'));
 
-datasetNames = ["PVT" "ALPH" "B3" "COV" "AB"];
+% datasetNames = ["PVT" "ALPH" "B3" "COV" "AB"];
+datasetNames = ["PVT"];
 restFolders = ["pseudorest" "rest" "rest" "rest" "rest"];
 timeIntervals = ["500/" "" "" "" ""];
 
@@ -50,7 +51,6 @@ for datasetIndex = 1:length(datasetNames)
 
         outputFileName = strrep(fileName, 'DATA', 'PHASES');
         outputFilePath = strcat(outputFolder, outputFileName);
-
         save(outputFilePath, 'output');
 
     end
