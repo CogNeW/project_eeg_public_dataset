@@ -7,7 +7,11 @@ addpath(strcat(pwd, '/../ETPAlgorithm/utilities'));
 addpath(strcat(pwd, '/../ETPAlgorithm'));
 
 % datasetNames = ["PVT" "ALPH" "B3" "COV" "AB"];
-datasetNames = ["PVT"];
+% AB ABS ALPH B3 COV ENS JAZZ PVT SENS TMS TRAN
+taskDatasets = ["AB" "ALPH" "B3" "COV" "ENS" "TRAN"];
+pseudoTaskDatasets = ["PVT" ];
+restDatasets = ["ABS" "JAZZ" "PVT" "SENS" "TMS"];
+
 restFolders = ["pseudorest" "rest" "rest" "rest" "rest"];
 timeIntervals = ["500/" "" "" "" ""];
 
