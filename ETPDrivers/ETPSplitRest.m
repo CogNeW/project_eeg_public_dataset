@@ -4,7 +4,8 @@
 % designated as training, with the other half designated as test/task
 
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
-restDatasets = ["ABS" "JAZZ" "PVT" "SENS" "TMS"];
+restDatasets = ["ABS" "JAZZ" "SENS" "TMS" "PVTRest"];
+% restDatasets = ["JAZZ"];
 epochLength = 2000;
 % folder structure is currently
 % datasets/opensource_c_epoched/__NAME__/not_chan_reduced/rest
@@ -12,8 +13,8 @@ epochLength = 2000;
 for datasetIndex = 1:length(restDatasets)
     datasetName = restDatasets(datasetIndex);
     inputFolder = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced/rest/mat/');
-    outputFolderTrain = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced/rest/train/');
-    outputFolderTest = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced/rest/test/');
+    outputFolderTrain = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced/rest/train/mat/');
+    outputFolderTest = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced/rest/test/mat/');
     
     mkdir(outputFolderTrain);
     mkdir(outputFolderTest);

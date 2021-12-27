@@ -1,17 +1,7 @@
-% This script will run the ETPTestEpoch algorithm and use the estimated
-% interpeak interval from the training set to estimate future peaks in the
-% task data.
+% This script will compute the average amplitude and standard deviation
+% for Oz, O1, O2, Pz to facilitate comparison and the creation of an
+% artifact rejection strategy
 
-% Quick note that the interpeak interval computed from the training portion
-% is in terms of samples. To convert it to frequency, the sampling rate
-% must be divided by that number
-
-
-% Loop through each rest dataset
-%   Find the appropriate one in test
-%   Run test epoch, and get the predicted angles
-
-addpath(strcat(pwd, '/../../ETPAlgorithm/dependencies/fieldtrip-20201214'));
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
 addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
@@ -19,13 +9,19 @@ taskDatasets = ["ALPH" "B3" "AB" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "PVTRest" "SENS" "TMS"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-% allDatasets = ["AB" "COV" "ENS"];
+% allDatasets = [restDatasets];
+varTypes = ["string", "string", "double", "double"];
+varNames = ["Name", "SubjectId", "MeanOzTest", "SDOzTest"];
 
+subjectTable = table('Size', [0, 4], ...
+ 'VariableTypes',varTypes,'VariableNames',varNames);
+
+targetChannel = "Oz";			
+neighbors = ["O1", "O2", "Pz"];
 
 for datasetIndex = 1:length(allDatasets)
     
     datasetName = allDatasets(datasetIndex);
-
     % Determine the right suffix depending on the dataset type
     inputSuffix = "";
     if(any(ismember(restDatasets, datasetName)))
@@ -36,19 +32,8 @@ for datasetIndex = 1:length(allDatasets)
     
     taskFolder = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced', inputSuffix, 'mat/');
     restIPIFolder = strcat(pwd, '/../../datasets/open_source_d_etp/', datasetName, '/all_epochs/train/');
-    outputFolder = strcat(pwd, '/../../datasets/open_source_d_etp/', datasetName, '/all_epochs/test/');
-    
-    if ~exist(outputFolder, 'dir')
-        mkdir(outputFolder);
-    end
     
     files = dir(restIPIFolder);
-
-    targetChannel = "Oz";
-    neighbors = ["O1", "O2", "Pz"];
-    targetFreq = [8 13];
-    
-    taskLengths = [];
 
     for i = 1:length(files)
         fileName = files(i).name;
@@ -73,32 +58,44 @@ for datasetIndex = 1:length(allDatasets)
             continue;
         end
 
-        restFilePath = strcat(restIPIFolder, fileName);
-        restIPIData = load(restFilePath).output;
         taskEEG = load(taskFilePath);
 
         if(isfield(taskEEG, 'EEG'))
            taskEEG = taskEEG.EEG; 
         end
-        
+
         electrodes = ExtractElectrodes(taskEEG.chanlocs, targetChannel, neighbors);
-        cycleEstimate = restIPIData.cycleEstimate;
-        if(~ any(ismember(restDatasets, datasetName)))
-            taskEEG.data = ConvertToCellArray(taskEEG.data, 0);
+        % check if missing electrodes and skip
+        if(electrodes(1) == -1 || size(electrodes, 2) ~= size(neighbors, 2) + 1)
+            disp(sprintf("%s missing electrodes", fileName));
+            continue;
         end
-        [accuracies, allPhases, allPowers] = computeEpochAccuracy(taskEEG.data, taskEEG.srate, targetFreq, cycleEstimate, electrodes);
+        
+        tokens = split(fileName, "_");
+        subjectId = tokens{4};
 
-        output = struct('accuracies', accuracies, 'allPhases', allPhases, 'allPowers', allPowers);
+        if(iscell(taskEEG.data))
+            OzData = [];
+            for j = 1:length(taskEEG.data)
+               OzData = [OzData taskEEG.data{j}(electrodes(1) , :)];
+            end
+        else
+            channelData = taskEEG.data(:, :, electrodes);
+            OzData = channelData(:, :, 1);
+        end
+        
+        
+        subjectTable(end + 1, :) = {datasetName, taskFileName, mean(OzData(:)), std(OzData(:))};
 
-        outputFileName = strrep(taskFileName, 'DATA', 'OUTPUT');
-        outputFilePath = strcat(outputFolder, outputFileName);
-
-        save(outputFilePath, 'output');
-        taskLengths = [size(taskEEG.data{1}, 2), taskLengths];
     end
-    
-    datasetName
-    unique(taskLengths)
-    taskEEG.srate
-    
+
 end
+
+% Take the average of each group
+testMeanTable = varfun(@mean, subjectTable, 'InputVariables', 'MeanOzTest', 'GroupingVariables', 'Name');
+testSDTable = varfun(@mean, subjectTable, 'InputVariables', 'SDOzTest', 'GroupingVariables', 'Name');
+
+testTables.mean = testMeanTable;
+testTables.SD = testSDTable;
+
+save('testTables.mat', 'testTables');
