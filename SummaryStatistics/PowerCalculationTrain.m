@@ -77,10 +77,11 @@ for datasetIndex = 1:length(allDatasets)
 end
 
 % Take the average of each group
-trainMeanTable = varfun(@mean, subjectTable, 'InputVariables', 'MeanOzTrain', 'GroupingVariables', 'Name');
-trainSDTable = varfun(@mean, subjectTable, 'InputVariables', 'SDOzTrain', 'GroupingVariables', 'Name');
+% trainMeanTable = varfun(@mean, subjectTable, 'InputVariables', 'MeanOzTrain', 'GroupingVariables', 'Name');
+% trainSDTable = varfun(@mean, subjectTable, 'InputVariables', 'SDOzTrain', 'GroupingVariables', 'Name');
 
-trainTables.mean = trainMeanTable;
-trainTables.SD = trainSDTable;
+% trainTables.mean = trainMeanTable;
+% trainTables.SD = trainSDTable;
 
-save('trainTables.mat', 'trainTables');
+% save('trainTables.mat', 'trainTables');
+save('trainIndividualTable.mat', 'subjectTable');

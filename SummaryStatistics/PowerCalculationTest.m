@@ -92,10 +92,11 @@ for datasetIndex = 1:length(allDatasets)
 end
 
 % Take the average of each group
-testMeanTable = varfun(@mean, subjectTable, 'InputVariables', 'MeanOzTest', 'GroupingVariables', 'Name');
-testSDTable = varfun(@mean, subjectTable, 'InputVariables', 'SDOzTest', 'GroupingVariables', 'Name');
+% testMeanTable = varfun(@mean, subjectTable, 'InputVariables', 'MeanOzTest', 'GroupingVariables', 'Name');
+% testSDTable = varfun(@mean, subjectTable, 'InputVariables', 'SDOzTest', 'GroupingVariables', 'Name');
 
-testTables.mean = testMeanTable;
-testTables.SD = testSDTable;
+% testTables.mean = testMeanTable;
+% testTables.SD = testSDTable;
 
-save('testTables.mat', 'testTables');
+% save('testTables.mat', 'testTables');
+save('testIndividualTable.mat', 'subjectTable');

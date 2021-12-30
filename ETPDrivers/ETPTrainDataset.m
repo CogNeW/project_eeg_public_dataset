@@ -24,6 +24,9 @@ pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
 
+trainThresholds = load('../SummaryStatistics/trainTables.mat');
+trainThresholds = trainThresholds.trainTables;
+
 for datasetIndex = 1:length(allDatasets)
     datasetName = allDatasets(datasetIndex);
     
