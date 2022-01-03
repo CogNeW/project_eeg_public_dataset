@@ -23,9 +23,12 @@ taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
+% allDatasets = ["SENS" "TMS"];
 
-trainThresholds = load('../SummaryStatistics/trainTables.mat');
-trainThresholds = trainThresholds.trainTables;
+trainThresholds = load('../SummaryStatistics/trainIndividualTableAll.mat');
+trainThresholds = trainThresholds.subjectTable;
+
+completelyRejected = strings(0);
 
 for datasetIndex = 1:length(allDatasets)
     datasetName = allDatasets(datasetIndex);
@@ -83,14 +86,36 @@ for datasetIndex = 1:length(allDatasets)
             EEG.data = ConvertToCellArray(EEG.data, 0);
         end
     
-        [cycleEstimate, actualPhases, actualPowers] = ETPTrainEpoch(EEG.data, 'TargetFreq', targetFreq, 'Electrodes', electrodes, 'SamplingRate', EEG.srate, ...
-                'Graph', false);
-
-        output = struct('cycleEstimate', cycleEstimate, 'actualPhases', actualPhases, 'actualPowers', actualPowers);
-
-        outputFileName = strrep(fileName, 'DATA', 'PHASES');
-        outputFilePath = strcat(outputFolder, outputFileName);
-        save(outputFilePath, 'output');
+%       Find statistics about file from thresholds table and then remove
+%       epochs with amplitudes that are too high
+        row = trainThresholds(strcmp(trainThresholds.SubjectId, fileName), :);
+        if(height(row) ~= 1)
+           fprintf("Could not find power information for %s, not removing epochs ...\n", fileName);
+        else
+            badIndexes = [];
+            for j = 1:length(EEG.data)
+                if(any(abs(EEG.data{j}(electrodes, :) - row.MeanOzTrain) > 3 * row.SDOzTrain, 'all'))
+                   badIndexes = [badIndexes j]; 
+                end
+            end
+            if(~isempty(badIndexes))
+                EEG.data(badIndexes) = [];
+            end
+        end
+        
+        if(isempty(EEG.data)) % can become empty if all channels were bad
+           completelyRejected(end + 1) = fileName;
+           continue; 
+        end
+        
+%         [cycleEstimate, actualPhases, actualPowers] = ETPTrainEpoch(EEG.data, 'TargetFreq', targetFreq, 'Electrodes', electrodes, 'SamplingRate', EEG.srate, ...
+%                 'Graph', false);
+% 
+%         output = struct('cycleEstimate', cycleEstimate, 'actualPhases', actualPhases, 'actualPowers', actualPowers);
+% 
+%         outputFileName = strrep(fileName, 'DATA', 'PHASES');
+%         outputFilePath = strcat(outputFolder, outputFileName);
+%         save(outputFilePath, 'output');
         
         restLengths = [size(EEG.data{1}, 2), restLengths];
 

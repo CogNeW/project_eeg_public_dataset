@@ -75,28 +75,27 @@ for datasetIndex = 1:length(allDatasets)
         subjectId = tokens{4};
 
         if(iscell(taskEEG.data))
-            OzData = [];
+            channelData = [];
             for j = 1:length(taskEEG.data)
-               OzData = [OzData taskEEG.data{j}(electrodes(1) , :)];
+                channelData = [channelData taskEEG.data{j}(electrodes, :)];
             end
         else
             channelData = taskEEG.data(:, :, electrodes);
-            OzData = channelData(:, :, 1);
         end
         
         
-        subjectTable(end + 1, :) = {datasetName, taskFileName, mean(OzData(:)), std(OzData(:))};
+        subjectTable(end + 1, :) = {datasetName, taskFileName, mean(channelData(:)), std(channelData(:))};
 
     end
 
 end
 
 % Take the average of each group
-% testMeanTable = varfun(@mean, subjectTable, 'InputVariables', 'MeanOzTest', 'GroupingVariables', 'Name');
-% testSDTable = varfun(@mean, subjectTable, 'InputVariables', 'SDOzTest', 'GroupingVariables', 'Name');
+testMeanTable = varfun(@mean, subjectTable, 'InputVariables', 'MeanOzTest', 'GroupingVariables', 'Name');
+testSDTable = varfun(@mean, subjectTable, 'InputVariables', 'SDOzTest', 'GroupingVariables', 'Name');
 
-% testTables.mean = testMeanTable;
-% testTables.SD = testSDTable;
+testTables.mean = testMeanTable;
+testTables.SD = testSDTable;
 
-% save('testTables.mat', 'testTables');
-save('testIndividualTable.mat', 'subjectTable');
+save('testTablesAll.mat', 'testTables');
+save('testIndividualTableAll.mat', 'subjectTable');

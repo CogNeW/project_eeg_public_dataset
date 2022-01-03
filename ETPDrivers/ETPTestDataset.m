@@ -21,6 +21,10 @@ restDatasets = ["ABS" "PVTRest" "SENS" "TMS"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
 % allDatasets = ["AB" "COV" "ENS"];
 
+testThresholds = load('../SummaryStatistics/testIndividualTableAll.mat');
+testThresholds = testThresholds.subjectTable;
+
+completelyRejected = strings(0);
 
 for datasetIndex = 1:length(allDatasets)
     
@@ -86,15 +90,38 @@ for datasetIndex = 1:length(allDatasets)
         if(~ any(ismember(restDatasets, datasetName)))
             taskEEG.data = ConvertToCellArray(taskEEG.data, 0);
         end
-        [accuracies, allPhases, allPowers] = computeEpochAccuracy(taskEEG.data, taskEEG.srate, targetFreq, cycleEstimate, electrodes);
-
-        output = struct('accuracies', accuracies, 'allPhases', allPhases, 'allPowers', allPowers);
-
-        outputFileName = strrep(taskFileName, 'DATA', 'OUTPUT');
-        outputFilePath = strcat(outputFolder, outputFileName);
-
-        save(outputFilePath, 'output');
-        taskLengths = [size(taskEEG.data{1}, 2), taskLengths];
+        
+%       Find statistics about file from thresholds table and then remove
+%       epochs with amplitudes that are too high
+        row = testThresholds(strcmp(testThresholds.SubjectId, taskFileName), :);
+        if(height(row) ~= 1)
+           fprintf("Could not find power information for %s, not removing epochs ...\n", taskFileName);
+        else
+            badIndexes = [];
+            for j = 1:length(taskEEG.data)
+                if(any(abs(taskEEG.data{j}(electrodes, :) - row.MeanOzTest) > 3 * row.SDOzTest, 'all'))
+                   badIndexes = [badIndexes j]; 
+                end
+            end
+            if(~isempty(badIndexes))
+                taskEEG.data(badIndexes) = [];
+            end
+        end
+        
+        if(isempty(taskEEG.data)) % can become empty if all channels were bad
+           completelyRejected(end + 1) = taskFileName;
+           continue; 
+        end
+        
+%         [accuracies, allPhases, allPowers] = computeEpochAccuracy(taskEEG.data, taskEEG.srate, targetFreq, cycleEstimate, electrodes);
+% 
+%         output = struct('accuracies', accuracies, 'allPhases', allPhases, 'allPowers', allPowers);
+% 
+%         outputFileName = strrep(taskFileName, 'DATA', 'OUTPUT');
+%         outputFilePath = strcat(outputFolder, outputFileName);
+% 
+%         save(outputFilePath, 'output');
+%         taskLengths = [size(taskEEG.data{1}, 2), taskLengths];
     end
     
     datasetName
