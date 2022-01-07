@@ -25,3 +25,5 @@ tbl.Subject  = categorical(tbl.Subject);
 
 lme = fitlme(tbl, 'Accuracy ~ Status + (Status | Dataset) + (Status | Dataset : Subject)');
 lme_cov = fitlme(tbl, 'Accuracy ~ Status + Power + Power * Status + (Status | Dataset) + (Status | Dataset : Subject)');
+
+lme_power_int = fitlme(tbl, 'Accuracy ~ Status + Power + Power * Status + (Status + Power + Power * Status | Dataset) + (Status + Power + Power * Status | Dataset : Subject)');
