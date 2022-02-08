@@ -13,7 +13,7 @@
 %   datasets\open_source_c_epoched\AB\not_chan_reduced\rest\test
 %   datasets\open_source_c_epoched\AB\not_chan_reduced\rest\train
 
-addpath(strcat(pwd, '/../../ETPAlgorithm/dependencies/fieldtrip-20201214'));
+% addpath(strcat(pwd, '/../../ETPAlgorithm/dependencies/fieldtrip-20201229'));
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
 addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
@@ -21,9 +21,9 @@ addpath(strcat(pwd, '/../../ETPAlgorithm'));
 % AB ABS ALPH B3 COV ENS JAZZ PVT SENS TMS TRAN
 taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
-restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN"];
+restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-% allDatasets = ["SENS" "TMS"];
+allDatasets= ["PVTRest"];
 
 trainThresholds = load('../SummaryStatistics/trainIndividualTableAll.mat');
 trainThresholds = trainThresholds.subjectTable;
@@ -41,7 +41,7 @@ for datasetIndex = 1:length(allDatasets)
         inputSuffix = "/rest/train/";
     else 
         % pseudorest
-        inputSuffix = "/pseudorest/500/";
+        inputSuffix = "/pseudorest/1000/";
     end
     
     inputFolder = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced', inputSuffix, 'mat/');
@@ -108,14 +108,19 @@ for datasetIndex = 1:length(allDatasets)
            continue; 
         end
         
-%         [cycleEstimate, actualPhases, actualPowers] = ETPTrainEpoch(EEG.data, 'TargetFreq', targetFreq, 'Electrodes', electrodes, 'SamplingRate', EEG.srate, ...
-%                 'Graph', false);
-% 
-%         output = struct('cycleEstimate', cycleEstimate, 'actualPhases', actualPhases, 'actualPowers', actualPowers);
-% 
-%         outputFileName = strrep(fileName, 'DATA', 'PHASES');
-%         outputFilePath = strcat(outputFolder, outputFileName);
-%         save(outputFilePath, 'output');
+        if(length(EEG.data) == 1) % if only one element left, can't split training set
+           completelyRejected(end + 1) = fileName;
+           continue; 
+        end
+        
+        [cycleEstimate, actualPhases, actualPowers] = ETPTrainEpoch(EEG.data, 'TargetFreq', targetFreq, 'Electrodes', electrodes, 'SamplingRate', EEG.srate, ...
+                'Graph', false);
+
+        output = struct('cycleEstimate', cycleEstimate, 'actualPhases', actualPhases, 'actualPowers', actualPowers);
+
+        outputFileName = strrep(fileName, 'DATA', 'PHASES');
+        outputFilePath = strcat(outputFolder, outputFileName);
+        save(outputFilePath, 'output');
         
         restLengths = [size(EEG.data{1}, 2), restLengths];
 

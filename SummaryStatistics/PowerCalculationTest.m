@@ -7,9 +7,9 @@ addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
 taskDatasets = ["ALPH" "B3" "AB" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
-restDatasets = ["ABS" "PVTRest" "SENS" "TMS"];
+restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-% allDatasets = [restDatasets];
+allDatasets = ["PVTRest"];
 varTypes = ["string", "string", "double", "double"];
 varNames = ["Name", "SubjectId", "MeanOzTest", "SDOzTest"];
 
@@ -43,10 +43,10 @@ for datasetIndex = 1:length(allDatasets)
         end
 
     %     Check if the matching file exists in the task set
-    %     Ex: PVT_S2_D4_REST_500ms_PHASES should correspond to PVT_S2_D4_TASK_DATA
+    %     Ex: PVT_S2_D4_REST_1000ms_PHASES should correspond to PVT_S2_D4_TASK_DATA
     
         if(datasetName == "PVT")
-            taskFileName = strrep(fileName, 'REST_500ms_PHASES', 'TASK_DATA');
+            taskFileName = strrep(fileName, 'REST_1000ms_PHASES', 'TASK_DATA');
         else
             taskFileName = strrep(fileName, 'REST_PHASES', 'TASK_DATA');
         end

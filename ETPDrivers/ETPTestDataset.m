@@ -11,15 +11,15 @@
 %   Find the appropriate one in test
 %   Run test epoch, and get the predicted angles
 
-addpath(strcat(pwd, '/../../ETPAlgorithm/dependencies/fieldtrip-20201214'));
+% addpath(strcat(pwd, '/../../ETPAlgorithm/dependencies/fieldtrip-20201214'));
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
 addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
-taskDatasets = ["ALPH" "B3" "AB" "COV" "ENS"];
+taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
-restDatasets = ["ABS" "PVTRest" "SENS" "TMS"];
+restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-% allDatasets = ["AB" "COV" "ENS"];
+allDatasets= ["PVTRest"];
 
 testThresholds = load('../SummaryStatistics/testIndividualTableAll.mat');
 testThresholds = testThresholds.subjectTable;
@@ -62,10 +62,10 @@ for datasetIndex = 1:length(allDatasets)
         end
 
     %     Check if the matching file exists in the task set
-    %     Ex: PVT_S2_D4_REST_500ms_PHASES should correspond to PVT_S2_D4_TASK_DATA
+    %     Ex: PVT_S2_D4_REST_1000ms_PHASES should correspond to PVT_S2_D4_TASK_DATA
     
         if(datasetName == "PVT")
-            taskFileName = strrep(fileName, 'REST_500ms_PHASES', 'TASK_DATA');
+            taskFileName = strrep(fileName, 'REST_1000ms_PHASES', 'TASK_DATA');
         else
             taskFileName = strrep(fileName, 'REST_PHASES', 'TASK_DATA');
         end
@@ -113,15 +113,15 @@ for datasetIndex = 1:length(allDatasets)
            continue; 
         end
         
-%         [accuracies, allPhases, allPowers] = computeEpochAccuracy(taskEEG.data, taskEEG.srate, targetFreq, cycleEstimate, electrodes);
-% 
-%         output = struct('accuracies', accuracies, 'allPhases', allPhases, 'allPowers', allPowers);
-% 
-%         outputFileName = strrep(taskFileName, 'DATA', 'OUTPUT');
-%         outputFilePath = strcat(outputFolder, outputFileName);
-% 
-%         save(outputFilePath, 'output');
-%         taskLengths = [size(taskEEG.data{1}, 2), taskLengths];
+        [accuracies, allPhases, allPowers] = computeEpochAccuracy(taskEEG.data, taskEEG.srate, targetFreq, cycleEstimate, electrodes);
+
+        output = struct('accuracies', accuracies, 'allPhases', allPhases, 'allPowers', allPowers);
+
+        outputFileName = strrep(taskFileName, 'DATA', 'OUTPUT');
+        outputFilePath = strcat(outputFolder, outputFileName);
+
+        save(outputFilePath, 'output');
+        taskLengths = [size(taskEEG.data{1}, 2), taskLengths];
     end
     
     datasetName

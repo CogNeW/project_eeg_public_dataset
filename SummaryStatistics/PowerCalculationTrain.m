@@ -7,9 +7,9 @@ addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
 taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
-restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN"];
+restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-% allDatasets = [restDatasets];
+allDatasets = ["PVTRest"];
 varTypes = ["string", "string", "double", "double"];
 varNames = ["Name", "SubjectId", "MeanOzTrain", "SDOzTrain"];
 
@@ -29,7 +29,7 @@ for datasetIndex = 1:length(allDatasets)
         inputSuffix = "/rest/train/";
     else 
         % pseudorest
-        inputSuffix = "/pseudorest/500/";
+        inputSuffix = "/pseudorest/1000/";
     end
     
     inputFolder = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced', inputSuffix, 'mat/');

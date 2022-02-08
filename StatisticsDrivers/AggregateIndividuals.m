@@ -2,11 +2,13 @@
 % each individual and store them in a file within open_source_e_statistics
 
 taskDatasets = ["ALPH" "B3" "AB" "COV" "ENS", "PVT"];
-restDatasets = ["ABS" "PVTRest" "SENS" "TMS"];
+restDatasets = ["ABS" "PVTRest" "SENS" "TMS" "JAZZ" "MICRO"];
 allDatasets = [taskDatasets restDatasets];
 
-columnTypes = ["string", "string", "string", "string", "string", "double", "double"];
-columnNames = ["Dataset", "Experiment", "Block", "Subject", "Day", "Accuracy", "Power"];
+taskDomains = ["Attention", "Decision", "Attention", "Attention", "Working Memory", "Vigilance"];
+
+columnTypes = ["string", "string", "string", "string", "string", "double", "double" "double" "string"];
+columnNames = ["Dataset", "Experiment", "Block", "Subject", "Day", "Accuracy", "Power" "Trial" "Domain"];
 
 for datasetIndex = 1:length(allDatasets)
     
@@ -16,8 +18,10 @@ for datasetIndex = 1:length(allDatasets)
     currentStatus = "";
     if(any(ismember(restDatasets, datasetName)))
         currentStatus = "rest";
+        currentDomain = "rest";
     else
         currentStatus = "task";
+        currentDomain = taskDomains(datasetIndex);
     end
     
     inputFolder = strcat(pwd, '/../../datasets/open_source_d_etp/', datasetName, '/all_epochs/test/');
@@ -31,6 +35,11 @@ for datasetIndex = 1:length(allDatasets)
     Status = strings(100000, 1);
     Accuracy = zeros(100000, 1);
     Power = zeros(100000, 1);
+    Trial = zeros(100000, 1);
+    Domain = strings(100000, 1);
+    
+    
+    
     index = 1;
     
     for i = 1:length(files)
@@ -64,6 +73,8 @@ for datasetIndex = 1:length(allDatasets)
             Accuracy(index) = 1 - (1 / pi) * abs(instPhase);
             Power(index) = instPower;
             Status(index) = currentStatus;
+            Trial(index) = j;
+            Domain(index) = currentDomain;
             
             index = index + 1;
         end
@@ -79,7 +90,10 @@ for datasetIndex = 1:length(allDatasets)
     Accuracy(index:end) = [];
     Power(index:end) = [];
     Status(index:end) = [];
-    outputTable = table(Dataset, Experiment, Block, Subject, Day, Accuracy, Power, Status);
+    Trial(index:end) = [];
+    Domain(index:end) = [];
+    
+    outputTable = table(Dataset, Experiment, Block, Subject, Day, Accuracy, Power, Status, Trial, Domain);
     outputFolder = strcat(pwd, '/../../datasets/open_source_e_statistics/', datasetName);
     save(outputFolder, 'outputTable');
 end
