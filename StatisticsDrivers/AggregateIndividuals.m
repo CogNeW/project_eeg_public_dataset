@@ -7,8 +7,13 @@ allDatasets = [taskDatasets restDatasets];
 
 taskDomains = ["Attention", "Decision", "Attention", "Attention", "Working Memory", "Vigilance"];
 
-columnTypes = ["string", "string", "string", "string", "string", "double", "double" "double" "string"];
-columnNames = ["Dataset", "Experiment", "Block", "Subject", "Day", "Accuracy", "Power" "Trial" "Domain"];
+columnTypes = ["string", "string", "string", "string", "string", "double", "double" "double" "string", "double", "double"];
+columnNames = ["Dataset", "Experiment", "Block", "Subject", "Day", "Accuracy", "Power" "Trial" "Domain", "SNR", "IAF"];
+
+% Block numbers for PVTRest
+BEO = ["B1", "B3", "B6", "B10"];
+EODatasets = ["ABS"];
+ECDatasets = ["SENS"];
 
 for datasetIndex = 1:length(allDatasets)
     
@@ -37,7 +42,8 @@ for datasetIndex = 1:length(allDatasets)
     Power = zeros(100000, 1);
     Trial = zeros(100000, 1);
     Domain = strings(100000, 1);
-    
+    SNR = zeros(100000, 1);
+    IAF = zeros(100000, 1);
     
     
     index = 1;
@@ -60,6 +66,25 @@ for datasetIndex = 1:length(allDatasets)
         blockNumber = tokens{3};
         subjectId = tokens{4};
         dayNumber = tokens{5};
+
+        if(strcmp(currentDomain, "rest"))
+            % for eyes open and closed, only PVT is the odd one out
+            if(strcmp(datasetName, 'PVTRest'))
+                % condition is based on block number
+                if(ismember(blockNumber, BEO))
+                    currentStatus = "EO";
+                else
+                    currentStatus = "EC";
+                end
+            elseif(ismember(datasetName, EODatasets))
+                currentStatus = "EO";
+            elseif(ismember(datasetName, ECDatasets))
+                currentStatus = "EC";
+            else
+                currentStatus = experimentNumber;
+            end
+        end
+
       
         for j = 1:length(output.allPhases)
             instPhase = output.allPhases(j);
@@ -75,6 +100,8 @@ for datasetIndex = 1:length(allDatasets)
             Status(index) = currentStatus;
             Trial(index) = j;
             Domain(index) = currentDomain;
+            SNR(index) = output.SNR;
+            IAF(index) = output.IAF;
             
             index = index + 1;
         end
@@ -92,8 +119,10 @@ for datasetIndex = 1:length(allDatasets)
     Status(index:end) = [];
     Trial(index:end) = [];
     Domain(index:end) = [];
+    SNR(index:end) = [];
+    IAF(index:end) = [];
     
-    outputTable = table(Dataset, Experiment, Block, Subject, Day, Accuracy, Power, Status, Trial, Domain);
+    outputTable = table(Dataset, Experiment, Block, Subject, Day, Accuracy, Power, Status, Trial, Domain, SNR, IAF);
     outputFolder = strcat(pwd, '/../../datasets/open_source_e_statistics/', datasetName);
     save(outputFolder, 'outputTable');
 end

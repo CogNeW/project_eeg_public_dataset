@@ -1,15 +1,15 @@
-%% ///// AUTOCLAVE /////
-% Automated pipeline for cleaning EEG data
-
 %% PROJECT
 % Open-Source Dataset Project Pre-Processing
+% This script will create a list of all channels for each dataset, so that
+% we can exclude triggering channels from further analyses
 
 %% PREPROCESSING
 % Reads in parameters from a separate JSON file
 settings = jsondecode(fileread('dataset_common_settings.json'));
 
 toSkip = ["REP" "TRAN" "COG"];
-toDo = ["ALPH"];
+
+actualReport = struct;
 
 % Get field names to iterate through
 datasetNames = fieldnames(settings);
@@ -17,22 +17,12 @@ for i = 1:length(datasetNames)
     if(ismember(datasetNames{i}, toSkip))
         continue;
     end
-  
-    if(~ismember(datasetNames{i}, toDo))
-        continue;
-    end
 
     param = settings.(datasetNames{i}).param;
 
     % CALL TO FUNCTION
     funct = {
-        @atclv2_step_removeBadChans...
-%         @atclv2_step_checkFlatChans...
-%         @atclv2_step_resample...
-%         @atclv2_step_open_source_event_cleaning...
-%         @atclv2_step_bandpass...
-%         @atclv2_step_aveRef...
-%         @atclv2_step_count_events
+        @atclv2_step_open_source_channel_list...
     };
 
     if(strcmp(datasetNames{i}, 'JAZZ'))
@@ -56,13 +46,11 @@ for i = 1:length(datasetNames)
     param.BPhp = 0.15;
     param.BPlp = 60;
     param.BPuseAuto = 1;
-
-    param.badChannels = ["EXG1" "EXG2" "EXG3" "EXG4" "EXG5" "EXG6" "EXG7" "EXG8" "EXG9" "EXG10" "EXG11" "EXG12" "EXG13" "EXG14" "EXG15" "EXG16" ...
-        "HEOG" "VEOG" "Status", "TRIG", "StimTrak", "SCR", "EKG", "EOG"];
     
     % cell of @functionHandles
     fullReport = atclv2_masterSelector(param,funct,...
         'auto',1,'save',0,'vol',1,'global',0);
+    actualReport.(datasetNames{i}) = fullReport;
     % auto - whether to ask what file to run
     % save - saves files during runtime
     % vol - 
@@ -76,3 +64,30 @@ for i = 1:length(datasetNames)
 %     end
 end
 %% END OF PIPELINE
+innerParams = fieldnames(actualReport);
+channelStruct = struct;
+
+for i = 1:length(innerParams)
+
+   innerParamName = innerParams{i};
+   report = actualReport.(innerParamName);
+   
+   channels = [];
+   
+   for j = 1:size(report, 1)
+       for k = 1:size(report, 2)
+          if(strcmp(report{j, k}, 'atclv2_step_open_source_channel_list'))
+             channelList = report{j, k+1}.channels;
+             for l = 1:size(channelList, 1)
+                 if(~any(strcmp(channels(:) , channelList(l))))
+                     channels = [channels channelList(l)];
+                 end
+             end
+             break;
+          end
+       end
+   end
+   
+   
+   channelStruct.(innerParamName) = channels; 
+end

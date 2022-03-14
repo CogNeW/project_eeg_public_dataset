@@ -23,10 +23,12 @@ taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-allDatasets= ["PVTRest"];
+allDatasets = ["ALPH"];
 
 trainThresholds = load('../SummaryStatistics/trainIndividualTableAll.mat');
 trainThresholds = trainThresholds.subjectTable;
+mappingReport = load('../SummaryStatistics/SNRTableCombined.mat');
+mappingReport = mappingReport.mappingReport;
 
 completelyRejected = strings(0);
 
@@ -79,6 +81,41 @@ for datasetIndex = 1:length(allDatasets)
             continue;
         end
         
+        % For MICRO, the SNR name has EO/EC replaced with 
+        % Also, replace REST_DATA wit TASK_DATA (they both come from the
+        % same file anyways)
+        snrName = fileName;
+        if(strcmp(datasetName, "MICRO"))
+            snrName = replace(snrName, "EO", "E1");
+            snrName = replace(snrName, "EC", "E1");
+            snrName = replace(snrName, "REST_DATA", "TASK_DATA");
+        end
+        
+        %         Find SNR value
+        snr = -1;
+        iaf = -1;
+        for j = 1:size(mappingReport, 1)
+            if(strcmp(mappingReport{j, 4}.open_source_c, snrName))
+                snr = mappingReport{j, 4}.SNR;
+                iaf = mappingReport{j, 4}.IAF;
+            end
+        end   
+       
+        if(isempty(iaf))
+           fprintf("%s: Missing Peak\n", snrName);
+           continue;
+        end
+        
+        if(snr < 0)
+           fprintf("%s: Negative SNR\n", snrName);
+           continue;
+        end
+        
+        if(iaf == -1)
+            fprintf("%s missing IAF value\n", snrName);
+            continue;
+        end
+        targetFreq = [iaf-2.5 iaf+2.5];
         % only non-rest datasets need to be converted to cell array, as rest
         % datasets are already converted (check ETPSplitRest)
         originalData = EEG.data;
@@ -116,7 +153,7 @@ for datasetIndex = 1:length(allDatasets)
         [cycleEstimate, actualPhases, actualPowers] = ETPTrainEpoch(EEG.data, 'TargetFreq', targetFreq, 'Electrodes', electrodes, 'SamplingRate', EEG.srate, ...
                 'Graph', false);
 
-        output = struct('cycleEstimate', cycleEstimate, 'actualPhases', actualPhases, 'actualPowers', actualPowers);
+        output = struct('cycleEstimate', cycleEstimate, 'actualPhases', actualPhases, 'actualPowers', actualPowers, 'SNR', snr, 'IAF', iaf);
 
         outputFileName = strrep(fileName, 'DATA', 'PHASES');
         outputFilePath = strcat(outputFolder, outputFileName);

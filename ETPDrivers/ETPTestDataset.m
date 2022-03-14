@@ -19,10 +19,12 @@ taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-allDatasets= ["PVTRest"];
+allDatasets = ["ALPH"];
 
 testThresholds = load('../SummaryStatistics/testIndividualTableAll.mat');
 testThresholds = testThresholds.subjectTable;
+mappingReport = load('../SummaryStatistics/SNRTableCombined.mat');
+mappingReport = mappingReport.mappingReport;
 
 completelyRejected = strings(0);
 
@@ -64,6 +66,7 @@ for datasetIndex = 1:length(allDatasets)
     %     Check if the matching file exists in the task set
     %     Ex: PVT_S2_D4_REST_1000ms_PHASES should correspond to PVT_S2_D4_TASK_DATA
     
+    
         if(datasetName == "PVT")
             taskFileName = strrep(fileName, 'REST_1000ms_PHASES', 'TASK_DATA');
         else
@@ -84,6 +87,41 @@ for datasetIndex = 1:length(allDatasets)
         if(isfield(taskEEG, 'EEG'))
            taskEEG = taskEEG.EEG; 
         end
+        
+        % For MICRO, the SNR name has EO/EC replaced with 
+        snrName = taskFileName;
+        if(strcmp(datasetName, "MICRO"))
+            snrName = replace(snrName, "EO", "E1");
+            snrName = replace(snrName, "EC", "E1");
+        elseif(any(ismember(restDatasets, datasetName)))
+            snrName = replace(snrName, "TASK_DATA", "REST_DATA");
+        end
+                
+        %         Find SNR value
+        snr = -1;
+        iaf = -1;
+        for j = 1:size(mappingReport, 1)
+            if(strcmp(mappingReport{j, 4}.open_source_c, snrName))
+                snr = mappingReport{j, 4}.SNR;
+                iaf = mappingReport{j, 4}.IAF;
+            end
+        end   
+       
+        if(isempty(iaf))
+           fprintf("%s: Missing Peak\n", snrName);
+           continue;
+        end
+        
+        if(snr < 0)
+           fprintf("%s: Negative SNR\n", snrName);
+           continue;
+        end
+        
+        if(iaf == -1)
+            fprintf("%s missing IAF value\n", snrName);
+            continue;
+        end
+        targetFreq = [iaf-2.5 iaf+2.5];
         
         electrodes = ExtractElectrodes(taskEEG.chanlocs, targetChannel, neighbors);
         cycleEstimate = restIPIData.cycleEstimate;
@@ -115,7 +153,7 @@ for datasetIndex = 1:length(allDatasets)
         
         [accuracies, allPhases, allPowers] = computeEpochAccuracy(taskEEG.data, taskEEG.srate, targetFreq, cycleEstimate, electrodes);
 
-        output = struct('accuracies', accuracies, 'allPhases', allPhases, 'allPowers', allPowers);
+        output = struct('accuracies', accuracies, 'allPhases', allPhases, 'allPowers', allPowers, 'SNR', snr, 'IAF', iaf);
 
         outputFileName = strrep(taskFileName, 'DATA', 'OUTPUT');
         outputFilePath = strcat(outputFolder, outputFileName);

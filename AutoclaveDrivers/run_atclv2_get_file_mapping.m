@@ -1,18 +1,13 @@
-%% ///// AUTOCLAVE /////
-% Automated pipeline for epoching EEG data
-
-%% PROJECT
-% Open-Source Dataset Project Epoching
-
-%% PREPROCESSING 
+% This project will get the file name mappings from open_source_b to open_source_c
 
 settings = jsondecode(fileread('dataset_epoch_settings.json'));
 
-toSkip = ["REP" "TRAN" "COG" "MICRO"];
+toSkip = ["REP" "TRAN" "COG"];
 toDo = ["ALPH"];
 
 % Get field names to iterate through
 datasetNames = fieldnames(settings);
+mappingReport = {};
 for i = 1:length(datasetNames)
 
     if(~ismember(datasetNames{i}, toDo))
@@ -41,17 +36,17 @@ for i = 1:length(datasetNames)
 
         % CALL TO FUNCTION
         funct = {
-            @atclv2_step_open_source_epoching
-            };
+            @atclv2_step_open_source_file_mapping
+        };
 
         % cell of @functionHandles
         fullReport = atclv2_masterSelector(param,funct,...
-            'auto',1,'save',1,'vol',1,'global',0);
+            'auto',1,'save',0,'vol',1,'global',0);
         % auto - whether to ask what file to run
         % save - saves files during runtime
         % vol - 
         % global - 
-    
+        mappingReport = [mappingReport; fullReport];    
     end
 
 end
