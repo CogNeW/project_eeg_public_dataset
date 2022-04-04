@@ -5,7 +5,7 @@
 
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
 restDatasets = ["ABS" "JAZZ" "SENS" "TMS" "PVTRest" "TRAN"];
-restDatasets = ["TMS" "PVTRest"];
+% restDatasets = ["TMS" "PVTRest"];
 epochLength = 2000;
 % folder structure is currently
 % datasets/opensource_c_epoched/__NAME__/not_chan_reduced/rest

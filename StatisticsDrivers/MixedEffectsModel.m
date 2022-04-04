@@ -26,16 +26,19 @@ tbl.Domain = categorical(tbl.Domain);
 
 sub = tbl(tbl.Dataset ~= 'ALPH', :);
 
-lm = fitlme(sub, 'Accuracy ~ Status');
-lme = fitlme(sub, 'Accuracy ~ Status + (Status | Dataset) + (Status | Dataset : Subject)');
-lme_power_int = fitlme(sub, 'Accuracy ~ Status + Power + Power * Status + (Status + Power + Power * Status | Dataset) + (Status + Power + Power * Status | Dataset : Subject)');
-lme_power_snr = fitlme(sub, 'Accuracy ~ Power * Status + SNR*Status + (SNR*Status + Power * Status | Dataset) + (SNR*Status + Power * Status | Dataset : Subject)');
+lm = fitlme(tbl, 'Accuracy ~ Status');
+lme = fitlme(tbl, 'Accuracy ~ Status + (1 | Dataset) + (1 | Dataset : Subject)');
+lme_power_int = fitlme(tbl, 'Accuracy ~ Status + Power + Power * Status + (Power | Dataset) + (Power | Dataset : Subject)');
+lme_power_snr = fitlme(tbl, 'Accuracy ~ Power * Status + SNR*Status + (SNR + Power | Dataset) + (SNR + Power| Dataset : Subject)');
 
-% lme_domain = fitlme(tbl, 'Accuracy ~ Status + (Status | Domain) + (Status | Domain:Dataset) + (Status | Domain: Dataset : Subject)');
-% lme_domain_power = fitlme(tbl, 'Accuracy ~ Status + Power + Power * Status + (Status + Power + Power * Status | Domain) + (Status + Power + Power * Status | Domain:Dataset) + (Status + Power + Power * Status | Domain: Dataset : Subject)');
 
-% lme_trial = fitlme(tbl, 'Accuracy ~ Status + (Status | Dataset) + (Status | Dataset : Subject) + (Status | Dataset : Subject : Trial)');
+slm = fitlme(sub, 'Accuracy ~ Status');
+slme = fitlme(sub, 'Accuracy ~ Status + (1 | Dataset) + (1 | Dataset : Subject)');
+slme_power_int = fitlme(sub, 'Accuracy ~ Status + Power + Power * Status + (Power | Dataset) + (Power | Dataset : Subject)');
+slme_power_snr = fitlme(sub, 'Accuracy ~ Power * Status + SNR*Status + (SNR + Power | Dataset) + (SNR + Power| Dataset : Subject)');
+
+
 
 % boxplot(tbl.Accuracy, tbl.Dataset)
 % compare(lm, lme)
-
+% boxplot(tbl.Accuracy, {tbl.Status, tbl.Dataset}, 'ColorGroup', tbl.Status)

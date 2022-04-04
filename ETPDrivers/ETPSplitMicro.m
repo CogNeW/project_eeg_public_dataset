@@ -19,7 +19,7 @@ mkdir(outputFolderTrain);
 
 files = dir(microPath);
 
-for i = 85:length(files)
+for i = 1:length(files)
     fileName = files(i).name;
 
     if(~ endsWith(fileName, '.mat'))

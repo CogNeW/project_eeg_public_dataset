@@ -19,7 +19,7 @@ taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-allDatasets = ["ALPH"];
+% allDatasets = ["ALPH"];
 
 testThresholds = load('../SummaryStatistics/testIndividualTableAll.mat');
 testThresholds = testThresholds.subjectTable;

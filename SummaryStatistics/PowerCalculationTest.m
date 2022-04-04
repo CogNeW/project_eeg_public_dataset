@@ -5,11 +5,11 @@
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
 addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
-taskDatasets = ["ALPH" "B3" "AB" "COV" sky"ENS"];
+taskDatasets = ["ALPH" "B3" "AB" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-allDatasets = ["ALPH"];
+% allDatasets = ["ALPH"];
 varTypes = ["string", "string", "double", "double"];
 varNames = ["Name", "SubjectId", "MeanOzTest", "SDOzTest"];
 

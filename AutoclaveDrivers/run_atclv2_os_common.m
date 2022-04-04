@@ -9,7 +9,7 @@
 settings = jsondecode(fileread('dataset_common_settings.json'));
 
 toSkip = ["REP" "TRAN" "COG"];
-toDo = ["ALPH"];
+% toDo = ["ALPH"];
 
 % Get field names to iterate through
 datasetNames = fieldnames(settings);
@@ -18,21 +18,22 @@ for i = 1:length(datasetNames)
         continue;
     end
   
-    if(~ismember(datasetNames{i}, toDo))
-        continue;
-    end
+    % if(~ismember(datasetNames{i}, toDo))
+    %     continue;
+    % end
 
     param = settings.(datasetNames{i}).param;
 
     % CALL TO FUNCTION
     funct = {
         @atclv2_step_removeBadChans...
-%         @atclv2_step_checkFlatChans...
-%         @atclv2_step_resample...
-%         @atclv2_step_open_source_event_cleaning...
-%         @atclv2_step_bandpass...
-%         @atclv2_step_aveRef...
-%         @atclv2_step_count_events
+        @atclv2_step_clean_artifacts...
+        @atclv2_step_checkFlatChans...
+        @atclv2_step_resample...
+        @atclv2_step_open_source_event_cleaning...
+        @atclv2_step_bandpass...
+        @atclv2_step_aveRef...
+        @atclv2_step_count_events
     };
 
     if(strcmp(datasetNames{i}, 'JAZZ'))
@@ -62,7 +63,7 @@ for i = 1:length(datasetNames)
     
     % cell of @functionHandles
     fullReport = atclv2_masterSelector(param,funct,...
-        'auto',1,'save',0,'vol',1,'global',0);
+        'auto',1,'save',1,'vol',1,'global',0);
     % auto - whether to ask what file to run
     % save - saves files during runtime
     % vol - 

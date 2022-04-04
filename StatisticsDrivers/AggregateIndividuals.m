@@ -83,6 +83,8 @@ for datasetIndex = 1:length(allDatasets)
             else
                 currentStatus = experimentNumber;
             end
+%             COMMENT THIS LATER
+%             currentStatus = "rest";
         end
 
       
@@ -122,6 +124,7 @@ for datasetIndex = 1:length(allDatasets)
     SNR(index:end) = [];
     IAF(index:end) = [];
     
+%     outputTable = table(Dataset, Experiment, Block, Subject, Day, Accuracy, Power, Status, Trial, Domain);
     outputTable = table(Dataset, Experiment, Block, Subject, Day, Accuracy, Power, Status, Trial, Domain, SNR, IAF);
     outputFolder = strcat(pwd, '/../../datasets/open_source_e_statistics/', datasetName);
     save(outputFolder, 'outputTable');

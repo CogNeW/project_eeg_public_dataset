@@ -9,7 +9,7 @@ taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-allDatasets = ["ALPH"];
+%allDatasets = ["ALPH"];
 varTypes = ["string", "string", "double", "double"];
 varNames = ["Name", "SubjectId", "MeanOzTrain", "SDOzTrain"];
 
