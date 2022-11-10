@@ -5,19 +5,21 @@
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
 addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
-taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
+taskDatasets = ["AB" "ALPH" "B3" "COV" "ENS" "TRAN"];
 pseudoRestDatasets = ["PVT"];
-restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "TRAN" "MICRO"];
+restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-%allDatasets = ["ALPH"];
+
+
 varTypes = ["string", "string", "double", "double"];
 varNames = ["Name", "SubjectId", "MeanOzTrain", "SDOzTrain"];
 
 subjectTable = table('Size', [0, 4], ...
  'VariableTypes',varTypes,'VariableNames',varNames);
 
-targetChannel = "Oz";			
-neighbors = ["O1", "O2", "Pz"];
+% param.chansInterest = {'Pz' 'Oz' 'Cz' 'P4' 'P3'}; % TEST2
+targetChannel = "Pz";			
+neighbors = ["Oz", "Cz", "P4", "P3"];
 
 for datasetIndex = 1:length(allDatasets)
     

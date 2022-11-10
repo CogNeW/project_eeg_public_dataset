@@ -2,3 +2,6 @@
 *.asv
 dependencies/**
 *.mat
+SummaryStatistics/MontageAnalysis/**
+StatisticsDrivers/*.csv
+SummaryStatistics/*.csv

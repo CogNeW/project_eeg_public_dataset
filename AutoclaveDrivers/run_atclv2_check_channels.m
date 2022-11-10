@@ -64,30 +64,41 @@ for i = 1:length(datasetNames)
 %     end
 end
 %% END OF PIPELINE
-innerParams = fieldnames(actualReport);
-channelStruct = struct;
 
-for i = 1:length(innerParams)
+% Going to go through each dataset and get a count of participants with the
+% channels that I want
 
-   innerParamName = innerParams{i};
-   report = actualReport.(innerParamName);
-   
-   channels = [];
-   
-   for j = 1:size(report, 1)
-       for k = 1:size(report, 2)
-          if(strcmp(report{j, k}, 'atclv2_step_open_source_channel_list'))
-             channelList = report{j, k+1}.channels;
-             for l = 1:size(channelList, 1)
-                 if(~any(strcmp(channels(:) , channelList(l))))
-                     channels = [channels channelList(l)];
-                 end
-             end
-             break;
-          end
-       end
-   end
-   
-   
-   channelStruct.(innerParamName) = channels; 
-end
+% montage1 = ["POz", "Oz", "Pz", "PO4", "PO3"];
+% missing1 = zeros(1, length(montage1));
+% montage2 = ["Pz", "POz", "P1", "P2", "CPz"];
+% missing2 = zeros(1, length(montage2));
+% 
+% innerParams = fieldnames(actualReport);
+
+% innerParams = fieldnames(actualReport);
+% channelStruct = struct;
+% 
+% for i = 1:length(innerParams)
+% 
+%    innerParamName = innerParams{i};
+%    report = actualReport.(innerParamName);
+%    
+%    channels = [];
+%    
+%    for j = 1:size(report, 1)
+%        for k = 1:size(report, 2)
+%           if(strcmp(report{j, k}, 'atclv2_step_open_source_channel_list'))
+%              channelList = report{j, k+1}.channels;
+%              for l = 1:size(channelList, 1)
+%                  if(~any(strcmp(channels(:) , channelList(l))))
+%                      channels = [channels channelList(l)];
+%                  end
+%              end
+%              break;
+%           end
+%        end
+%    end
+%    
+%    
+%    channelStruct.(innerParamName) = channels; 
+% end

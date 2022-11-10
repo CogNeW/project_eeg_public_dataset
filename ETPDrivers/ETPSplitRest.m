@@ -4,8 +4,8 @@
 % designated as training, with the other half designated as test/task
 
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
-restDatasets = ["ABS" "JAZZ" "SENS" "TMS" "PVTRest" "TRAN"];
-% restDatasets = ["TMS" "PVTRest"];
+restDatasets = ["JAZZ" "SENS" "TMS" "PVTRest" "TRAN" "ABS"];
+% restDatasets = ["ABS"];
 epochLength = 2000;
 % folder structure is currently
 % datasets/opensource_c_epoched/__NAME__/not_chan_reduced/rest

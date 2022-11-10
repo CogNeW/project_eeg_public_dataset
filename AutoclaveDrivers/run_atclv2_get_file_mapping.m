@@ -3,13 +3,13 @@
 settings = jsondecode(fileread('dataset_epoch_settings.json'));
 
 toSkip = ["REP" "TRAN" "COG"];
-% toDo = ["ALPH"];
+toDo = ["PVT"];
 
 % Get field names to iterate through
 datasetNames = fieldnames(settings);
 mappingReport = {};
 for i = 1:length(datasetNames)
-
+% 
 %     if(~ismember(datasetNames{i}, toDo))
 %        continue; 
 %     end

@@ -15,11 +15,10 @@
 addpath(strcat(pwd, '/../../ETPAlgorithm/utilities'));
 addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
-taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
+taskDatasets = ["AB" "ALPH" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "MICRO"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-% allDatasets = ["ALPH"];
 
 testThresholds = load('../SummaryStatistics/testIndividualTableAll.mat');
 testThresholds = testThresholds.subjectTable;
@@ -50,8 +49,8 @@ for datasetIndex = 1:length(allDatasets)
     
     files = dir(restIPIFolder);
 
-    targetChannel = "Oz";
-    neighbors = ["O1", "O2", "Pz"];
+    targetChannel = "Pz";           
+    neighbors = ["Oz", "Cz", "P4", "P3"];
     targetFreq = [8 13];
     
     taskLengths = [];

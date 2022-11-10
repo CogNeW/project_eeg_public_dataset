@@ -7,17 +7,16 @@
 %% PREPROCESSING 
 
 settings = jsondecode(fileread('dataset_epoch_settings.json'));
-
 toSkip = ["REP" "TRAN" "COG"];
-% toDo = ["ALPH"];
+toDo = ["MICRO", "ENS"];
 actualReport = {};
 % Get field names to iterate through
 datasetNames = fieldnames(settings);
 for i = 1:length(datasetNames)
 
-%     if(~ismember(datasetNames{i}, toDo))
-%        continue; 
-%     end
+    if(~ismember(datasetNames{i}, toDo))
+       continue; 
+    end
     
     if(ismember(datasetNames{i}, toSkip))
         continue;

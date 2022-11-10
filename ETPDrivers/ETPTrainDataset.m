@@ -19,11 +19,11 @@ addpath(strcat(pwd, '/../../ETPAlgorithm'));
 
 % datasetNames = ["PVT" "ALPH" "B3" "COV" "AB"];
 % AB ABS ALPH B3 COV ENS JAZZ PVT SENS TMS TRAN
-taskDatasets = ["ALPH" "AB" "B3" "COV" "ENS"];
+taskDatasets = ["AB" "ALPH" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
-restDatasets = ["ABS" "JAZZ" "PVTRest" "SENS" "TMS" "MICRO"];
+restDatasets = ["JAZZ" "PVTRest" "SENS" "TMS" "MICRO" "ABS"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-allDatasets = ["MICRO"];
+allDatasets = ["ABS"];
 
 trainThresholds = load('../SummaryStatistics/trainIndividualTableAll.mat');
 trainThresholds = trainThresholds.subjectTable;
@@ -55,8 +55,8 @@ for datasetIndex = 1:length(allDatasets)
     files = dir(inputFolder);
 
     targetFreq = [8 13];
-    targetChannel = "Oz";
-    neighbors = ["O1", "O2", "Pz"];
+    targetChannel = "Pz";           
+    neighbors = ["Oz", "Cz", "P4", "P3"];
     
     restLengths = [];
 

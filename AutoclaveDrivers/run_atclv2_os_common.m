@@ -9,7 +9,7 @@
 settings = jsondecode(fileread('dataset_common_settings.json'));
 
 toSkip = ["REP" "TRAN" "COG"];
-% toDo = ["ALPH"];
+toDo = ["JAZZ"];
 
 % Get field names to iterate through
 datasetNames = fieldnames(settings);
@@ -18,9 +18,9 @@ for i = 1:length(datasetNames)
         continue;
     end
   
-    % if(~ismember(datasetNames{i}, toDo))
-    %     continue;
-    % end
+%     if(~ismember(datasetNames{i}, toDo))
+%         continue;
+%     end
 
     param = settings.(datasetNames{i}).param;
 
@@ -32,9 +32,10 @@ for i = 1:length(datasetNames)
         @atclv2_step_resample...
         @atclv2_step_open_source_event_cleaning...
         @atclv2_step_bandpass...
-        @atclv2_step_aveRef...
         @atclv2_step_count_events
     };
+
+% REMOVING AVERAGE REFERENCE FOR NOW:        @atclv2_step_aveRef...
 
     if(strcmp(datasetNames{i}, 'JAZZ'))
         funct = [{@atclv2_step_BVchanLabeler} funct];
@@ -48,12 +49,16 @@ for i = 1:length(datasetNames)
     end
 
     % whether to add renaming step to avoid having it applied to all datasets
-    if param.renamingFlag
+    if strcmp(datasetNames{i}, "ALPH")
+        funct = [{@atclv2_step_renaming_alpha} funct];
+    elseif param.renamingFlag
         funct = [{@atclv2_step_renaming} funct];
     end
 
-    param.chansInterest = {'Oz' 'O1' 'O2' 'Pz'};
-
+%     param.chansInterest = {'POz' 'Oz' 'Pz' 'PO4' 'PO3'};
+%     param.chansInterest = {'Pz' 'P1' 'P2' 'CPz' 'POz'}; % TEST1
+    param.chansInterest = {'Pz' 'Oz' 'Cz' 'P4' 'P3'}; % TEST2
+    
     param.BPhp = 0.15;
     param.BPlp = 60;
     param.BPuseAuto = 1;
