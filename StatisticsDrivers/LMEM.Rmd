@@ -1,0 +1,26 @@
+---
+title: "LMEM"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("emmeans")
+library("R.matlab")
+library("data.table")
+library("readr")
+library("lme4")
+```
+
+# Read table
+```{r}
+baseFolder = "/Users/be_battlestation/Documents/EEGCognitionPrediction/StatisticsDrivers/tbl.csv"
+tbl = read_csv(baseFolder)
+```
+
+# Run lme
+
+```{r}
+mdl = lmer('Accuracy ~ Power * Status + SNR*Status + (SNR + Power | Dataset) + (SNR + Power| Dataset : Subject)', tbl)
+```
+
