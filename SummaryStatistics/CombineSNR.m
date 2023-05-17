@@ -13,6 +13,8 @@ for i = 1:size(actualReport, 1)
         if(strcmp(mappingReport{j, 4}.open_source_b, b_name))
             mappingReport{j, 4}.SNR = actualReport{i, 4}.peak_SNR;
             mappingReport{j, 4}.IAF = actualReport{i, 4}.peak_frequency;
+            mappingReport{j, 5}.eBOSCSNR = actualReport{i, 6}.peak_SNR;
+            mappingReport{j, 5}.IAF = actualReport{i, 6}.peak_frequency;
             row = j;
         end
     end
@@ -22,4 +24,4 @@ for i = 1:size(actualReport, 1)
     end
 end
 
-save('SNRTableCombined.mat', 'mappingReport');
+save('MinPeakMEMOIZEDeBOSCSNRTableCombined.mat', 'mappingReport');

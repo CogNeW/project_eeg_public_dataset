@@ -8,32 +8,21 @@
 %%
 
 % Compare the accuracies between the three conditions
-datasetName = "PVTEOPost";
-inputFolder = strcat(pwd, '/../../datasets/open_source_d_etp/', datasetName, '/all_epochs/test/');
 
-files = dir(inputFolder);
-accuracies = [];
+conditions = ["EC", "EO", "task"];
 
-for i = 1:length(files)
-    fileName = files(i).name;
-
-    if(~ endsWith(fileName, '.mat'))
-       continue; 
-    end
-    filePath = strcat(inputFolder, fileName);
-
-    etpStruct = load(filePath);
-    accuracies = [accuracies (1 - abs(etpStruct.output.allPhases) / pi)];
-
+for i = 1:length(conditions)
+    condition = conditions(i)
+    disp("Accuracy");
+    mean(tbl(tbl.Status == condition, :).Accuracy)
+    std(tbl(tbl.Status == condition, :).Accuracy)
+    disp("Power");
+    mean(tbl(tbl.Status == condition, :).Power)
+    std(tbl(tbl.Status == condition, :).Power)
+    disp("SNR");
+    mean(tbl(tbl.Status == condition, :).SNR)
+    std(tbl(tbl.Status == condition, :).SNR)
 end
-
-mean(accuracies)
-std(accuracies)
-
-% ECPre = 71.16% +/- 23.73%
-% EOPre = 74.23% +/- 22.97%
-% EOPost = 73.73% +/- 23.29%
-% Intertrial Interval = 75.22% +/- 22.50%
 
 %%
 
@@ -69,14 +58,29 @@ std(cycleLengths)
 
 %%
 % Boxplot with increased thickness
-h = boxplot(tbl.Accuracy, tbl.Status, 'Orientation', 'horizontal');
+
+accuracies = [ .76039, .76039 - 0.016107, .76039 - .017376];
+errors = [ 0.00056911, 0.00079621, 0.0006034];
+
+h = barh(accuracies);
 set(h,{'linew'},{2});
 title('Accuracy by Cognitive State', 'FontSize', 24);
 xlabel('Accuracy', 'FontSize', 24);
 ylabel('Cognitive State', 'FontSize', 24);
+
+set(gca, 'yticklabel', { 'EC', 'EO', 'Task' });
+
 ax = gca;
 ax.FontSize = 24;
 ax.LineWidth = 3;
+
+
+% h = boxplot(tbl.Accuracy, tbl.Status, 'Orientation', 'horizontal');
+% set(h,{'linew'},{2});
+% title('Accuracy by Cognitive State', 'FontSize', 24);
+% xlabel('Accuracy', 'FontSize', 24);
+% ylabel('Cognitive State', 'FontSize', 24);
+
 %%
 % Boxplot with increased thickness
 h = boxplot(tbl.Power, tbl.Status, 'Orientation', 'horizontal');

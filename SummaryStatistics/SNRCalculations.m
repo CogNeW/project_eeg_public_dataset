@@ -87,3 +87,25 @@ cell2table(totaltbl, 'VariableNames', {'Dataset', 'Remaining Files', 'Negative S
 %    totaltbl{i, 5} = totaltbl{i, 3} + totaltbl{i, 4}; 
 %    totaltbl{i, 6} = totaltbl{i, 5} / totaltbl{i, 2};
 % end
+
+%% We will compare Zrenner SNR to eBOSC SNR
+n = length(mappingReport);
+allZrennerSNR = [];
+alleBOSCSNR = [];
+allZrennerFreq = [];
+alleBOSCFreq = [];
+
+for i = 1:size(mappingReport, 1)
+    if(mappingReport{i, 4}.SNR == -999 || mappingReport{i, 5}.eBOSCSNR == -999 || ...
+        isnan(mappingReport{i, 4}.SNR) || isnan(mappingReport{i, 5}.eBOSCSNR))
+        continue;
+    end
+    
+    allZrennerSNR = [allZrennerSNR, mappingReport{i, 4}.SNR];
+    allZrennerFreq = [allZrennerFreq, mappingReport{i, 4}.IAF];
+    alleBOSCSNR = [alleBOSCSNR, mappingReport{i, 5}.eBOSCSNR];
+    alleBOSCFreq = [alleBOSCFreq, mappingReport{i, 5}.IAF];
+end
+
+[r, p] = corr(allZrennerFreq', alleBOSCFreq')
+[r, p] = corr(allZrennerSNR', alleBOSCSNR')

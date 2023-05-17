@@ -6,17 +6,21 @@
 
 %% PREPROCESSING 
 
+addpath('../general_eBOSC');
+addpath('../general_eBOSC/internal');
+addpath('../general_eBOSC/external/BOSC');
+
 settings = jsondecode(fileread('dataset_epoch_settings.json'));
 toSkip = ["REP" "TRAN" "COG"];
-toDo = ["MICRO", "ENS"];
+% toDo = ["ENS"];
 actualReport = {};
 % Get field names to iterate through
 datasetNames = fieldnames(settings);
 for i = 1:length(datasetNames)
-
-    if(~ismember(datasetNames{i}, toDo))
-       continue; 
-    end
+% 
+%     if(~ismember(datasetNames{i}, toDo))
+%        continue; 
+%     end
     
     if(ismember(datasetNames{i}, toSkip))
         continue;
@@ -45,6 +49,7 @@ for i = 1:length(datasetNames)
         % CALL TO FUNCTION
         funct = {
             @atclv2_step_estimateSNR...
+            @atclv2_step_eBOSC...
         };
 
         % cell of @functionHandles

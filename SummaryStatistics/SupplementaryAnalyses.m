@@ -6,6 +6,48 @@ for i = 1:length(datasetNames)
    curName = datasetNames(i)
    countcats(tbl(tbl.Dataset == curName, :).Status)
 end
+
+countcats(tbl.Status)
+%% Get number of participants per dataset
+
+% ABSEO 95, ABtask 41, ALPHtask 14, B3task 21, COVtask 24, ENStask 29, JAZZEC 38, JAZZEO 38, MICROEC 152, MICROEO 152, PVTRestEC 35, PVTRestEO 34, PVTtask 32, SENSEC 19, TMSEC 16, TMSEO 15
+
+
+totalSubject = 0;
+
+for i = 1:length(datasetNames)
+   curName = datasetNames(i)
+   length(unique(tbl(tbl.Dataset == curName, :).Subject))
+   totalSubject = totalSubject + length(unique(tbl(tbl.Dataset == curName, :).Subject));
+end
+
+%% Get breakdown by prediction
+
+taskDatasets = ["AB" "ALPH" "B3" "COV" "ENS" "PVT"];
+% taskDatasets = ["ALPH" "B3" "COV" "ENS"];
+pseudoRestDatasets = ["PVT"];
+restDatasets = ["JAZZ" "PVTRest" "SENS" "TMS" "MICRO" "ABS"];
+allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
+
+datasetNames = fieldnames(epochLengths);
+predictionBreakdown = table;
+predictionBreakdown.name = string(datasetNames);
+predictionBreakdown.type = ["Task","Task","Task","Task","Task","Task","EC", "EO", "EO", "EC", "EC", "EC", "EO", "EC", "EO", "EO"]';
+
+predCount = [];
+
+for i = 1:length(datasetNames)
+%    datasetName = datasetNames{i};
+   curName = datasetNames(i);
+   if(any(ismember(taskDatasets, curName)))
+        curName = strcat(curName, 'task');
+   end
+   sum(countcats(tbl(tbl.Dataset == curName, :).Status))
+   predCount = [predCount, sum(countcats(tbl(tbl.Dataset == curName, :).Status))];
+end
+
+predictionBreakdown.predictions = predCount';
+
 %% Check Accuracies
 
 boxplot(tbl.Accuracy, tbl.Dataset)

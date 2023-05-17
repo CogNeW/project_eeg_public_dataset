@@ -22,21 +22,27 @@ allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
 
 testThresholds = load('../SummaryStatistics/testIndividualTableAll.mat');
 testThresholds = testThresholds.subjectTable;
-mappingReport = load('../SummaryStatistics/SNRTableCombined.mat');
+mappingReport = load('../SummaryStatistics/MinPeakMEMOIZEDeBOSCSNRTableCombined.mat');
 mappingReport = mappingReport.mappingReport;
 
 completelyRejected = strings(0);
 
+removedEpochs = struct;
+
 for datasetIndex = 1:length(allDatasets)
     
     datasetName = allDatasets(datasetIndex);
+    removedCount = 0;
 
     % Determine the right suffix depending on the dataset type
     inputSuffix = "";
+    datasetType = "";
     if(any(ismember(restDatasets, datasetName)))
         inputSuffix = "/rest/test/";
+        datasetType = "rest";
     else
         inputSuffix = "/task/";
+        datasetType = "task";
     end
     
     taskFolder = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced', inputSuffix, 'mat/');
@@ -103,10 +109,12 @@ for datasetIndex = 1:length(allDatasets)
             if(strcmp(mappingReport{j, 4}.open_source_c, snrName))
                 snr = mappingReport{j, 4}.SNR;
                 iaf = mappingReport{j, 4}.IAF;
+%                   snr = mappingReport{j, 5}.eBOSCSNR;
+%                   iaf = mappingReport{j, 5}.IAF;
             end
-        end   
-       
-        if(isempty(iaf))
+        end  
+        
+        if(isempty(iaf) || isnan(iaf))
            fprintf("%s: Missing Peak\n", snrName);
            continue;
         end
@@ -142,6 +150,7 @@ for datasetIndex = 1:length(allDatasets)
             end
             if(~isempty(badIndexes))
                 taskEEG.data(badIndexes) = [];
+                removedCount = removedCount + length(badIndexes);
             end
         end
         
@@ -164,5 +173,6 @@ for datasetIndex = 1:length(allDatasets)
     datasetName
     unique(taskLengths)
     taskEEG.srate
+    removedEpochs.(datasetName) = removedCount;
     
 end

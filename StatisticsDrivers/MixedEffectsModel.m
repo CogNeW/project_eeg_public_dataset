@@ -30,11 +30,23 @@ tbl.Domain = categorical(tbl.Domain);
 
 % sub = tbl(tbl.Dataset ~= 'ALPH', :);
 
-% lm = fitlme(tbl, 'Accuracy ~ Status');
+lm = fitlme(tbl, 'Accuracy ~ Status');
+lme = fitlme(tbl, 'Accuracy ~ Status + (1 | Dataset) + (1 | Dataset : Subject)');
+lme_power = fitlme(tbl, 'Accuracy ~ Status + Power + Power * Status + (Power | Dataset) + (Power | Dataset : Subject)');
+lme_power_snr_complete = fitlme(tbl, 'Accuracy ~ Status + Power*Status + SNR*Status + Power*SNR*Status + (SNR*Power | Dataset) + (SNR*Power| Dataset : Subject)');
+% lme_power_snr_no_duplicates = fitlme(tbl, 'Accuracy ~ Status + Power + SNR + Power:SNR + Power:Status + SNR:Status + Power:SNR:Status + (SNR*Power | Dataset) + (SNR*Power| Dataset : Subject)');
+
+lm_struct = struct;
+lm_struct.lm = lm;
+lm_struct.lme = lme;
+lm_struct.lme_power = lme_power;
+lm_struct.lme_power_snr_complete = lme_power_snr_complete;
+
+null_mdl = fitlme(tbl, 'Accuracy ~ 1 + (1 | Dataset) + (1 | Dataset : Subject)');
+
 % lme = fitlme(tbl, 'Accuracy ~ Status + (1 | Dataset) + (1 | Dataset : Subject)');
 % lme_power_int = fitlme(tbl, 'Accuracy ~ Status + Power + Power * Status + (Power | Dataset) + (Power | Dataset : Subject)');
 % lme_power_snr = fitlme(tbl, 'Accuracy ~ Power * Status + SNR*Status + (SNR + Power | Dataset) + (SNR + Power| Dataset : Subject)');
-% lme_power_snr_complete = fitlme(tbl, 'Accuracy ~ Power * Status + SNR*Status + Power*SNR*Status + (SNR*Power | Dataset) + (SNR*Power| Dataset : Subject)');
 % lme_power_iaf = fitlme(tbl, 'Accuracy ~ Power * Status + IAF*Status + (IAF + Power | Dataset) + (IAF + Power| Dataset : Subject)');
 
 % slm = fitlme(sub, 'Accuracy ~ Status');
@@ -48,9 +60,9 @@ tbl.Domain = categorical(tbl.Domain);
 % cd_lme1 = fitlme(no_rest, 'Accuracy ~ Status + Domain + (1 | Dataset) + (1 | Dataset : Subject)');
 % cd_lme2 = fitlme(no_rest, 'Accuracy ~ Domain + Domain * Power + Domain * SNR + (SNR + Power | Dataset) + (SNR + Power | Dataset : Subject)');
 
-at_lme = fitlme(no_rest, 'Accuracy ~ AttentionType + (1 | Dataset) + (1 | Dataset : Subject)');
+% at_lme = fitlme(no_rest, 'Accuracy ~ AttentionType + (1 | Dataset) + (1 | Dataset : Subject)');
 % at_lme1 = fitlme(no_rest, 'Accuracy ~ Status + AttentionType + (1 | Dataset) + (1 | Dataset : Subject)');
-at_lme2 = fitlme(no_rest, 'Accuracy ~ AttentionType + AttentionType*SNR*Power + (SNR*Power | Dataset) + (SNR*Power | Dataset : Subject)');
+% at_lme2 = fitlme(no_rest, 'Accuracy ~ AttentionType + AttentionType*SNR*Power + (SNR*Power | Dataset) + (SNR*Power | Dataset : Subject)');
 
 
 % boxplot(tbl.Accuracy, tbl.Dataset)

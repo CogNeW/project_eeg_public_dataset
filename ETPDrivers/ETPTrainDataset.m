@@ -23,11 +23,12 @@ taskDatasets = ["AB" "ALPH" "B3" "COV" "ENS"];
 pseudoRestDatasets = ["PVT"];
 restDatasets = ["JAZZ" "PVTRest" "SENS" "TMS" "MICRO" "ABS"];
 allDatasets = [taskDatasets pseudoRestDatasets restDatasets];
-allDatasets = ["ABS"];
+% allDatasets = [taskDatasets pseudoRestDatasets];
+% allDatasets = ["ENS"];
 
 trainThresholds = load('../SummaryStatistics/trainIndividualTableAll.mat');
 trainThresholds = trainThresholds.subjectTable;
-mappingReport = load('../SummaryStatistics/SNRTableCombined.mat');
+mappingReport = load('../SummaryStatistics/MinPeakMEMOIZEDeBOSCSNRTableCombined.mat');
 mappingReport = mappingReport.mappingReport;
 
 completelyRejected = strings(0);
@@ -37,13 +38,17 @@ for datasetIndex = 1:length(allDatasets)
     
     % Determine the right suffix depending on the dataset type
     inputSuffix = "";
+    datasetType = "";
     if(any(ismember(taskDatasets, datasetName)))
         inputSuffix = "/rest/";
+        datasetType = "task";
     elseif(any(ismember(restDatasets, datasetName)))
         inputSuffix = "/rest/train/";
+        datasetType = "rest";
     else 
         % pseudorest
         inputSuffix = "/pseudorest/1000/";
+        datasetType = "task";
     end
     
     inputFolder = strcat(pwd, '/../../datasets/open_source_c_epoched/', datasetName, '/not_chan_reduced', inputSuffix, 'mat/');
@@ -60,8 +65,29 @@ for datasetIndex = 1:length(allDatasets)
     
     restLengths = [];
 
+    % This is to get the average number of epoch lengths and counts across
+    % comparisons. We need to retain 39% of the task datasets since we have
+    % so many more than the rest datasets. When using 39%, only run this on
+    % the task dataset.
+   
+    if(strcmp(datasetType, "rest"))
+        ratioLength = length(files);
+    else
+        ratioLength = fix(0.25 * length(files)); 
+    end
+    
+%     ratioLength = length(files);
+    
+    count = 0;
+        
+    
+    
     for i = 1:length(files)
         fileName = files(i).name;
+        
+        if(count == ratioLength)
+            break;
+        end
 
         if(~ endsWith(fileName, '.mat'))
            continue; 
@@ -98,10 +124,12 @@ for datasetIndex = 1:length(allDatasets)
             if(strcmp(mappingReport{j, 4}.open_source_c, snrName))
                 snr = mappingReport{j, 4}.SNR;
                 iaf = mappingReport{j, 4}.IAF;
+%                   snr = mappingReport{j, 5}.eBOSCSNR;
+%                   iaf = mappingReport{j, 5}.IAF;
             end
         end   
        
-        if(isempty(iaf))
+        if(isempty(iaf) || isnan(iaf))
            fprintf("%s: Missing Peak\n", snrName);
            continue;
         end
@@ -123,6 +151,8 @@ for datasetIndex = 1:length(allDatasets)
             EEG.data = ConvertToCellArray(EEG.data, 0);
         end
     
+        count = count + 1;
+        
 %       Find statistics about file from thresholds table and then remove
 %       epochs with amplitudes that are too high
         row = trainThresholds(strcmp(trainThresholds.SubjectId, fileName), :);
@@ -160,7 +190,7 @@ for datasetIndex = 1:length(allDatasets)
         save(outputFilePath, 'output');
         
         restLengths = [size(EEG.data{1}, 2), restLengths];
-
+ 
     end
     
     datasetName
