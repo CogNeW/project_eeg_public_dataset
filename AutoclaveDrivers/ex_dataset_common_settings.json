@@ -1,0 +1,257 @@
+{
+	"PVT": {
+		"param": {
+			"inFolder": "open_source_a_raw/PVT",
+			"outFolder": "open_source_b_rereferenced/PVT/not_chan_reduced",
+			"fileType": "**/*.eeg",
+			"regEpoch": 1,
+			"isDeltaUsed": 1,
+			"deltaToDelete": 0.0040,
+			"resampleRate": 250,
+			"startEventPattern": "S\\s(\\s)?\\d(\\d)?", 
+			"endEventPattern": "S\\d\\d\\d",
+			"eventFileName": "PVT_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 1
+		}
+	},
+	"ALPH": {
+		"param": {
+			"inFolder": "open_source_a_raw/ALPH",
+			"outFolder": "open_source_b_rereferenced/ALPH/not_chan_reduced",
+			"fileType": "**/*.edf",
+			"regEpoch": 1,
+			"isDeltaUsed": 1,
+			"deltaToDelete": 0.0020,
+			"resampleRate": 250,
+			"startEventPattern": "^(6|7|8|9)$",
+			"endEventPattern": "^10$",
+			"eventFileName": "ALPH_event_codes.json",
+			"indexOfEvents": 12,
+			"numOfChannels": 64,
+			"renameFile": "ALPH_new_renaming_codes.json",
+			"renamingFlag": 1,
+			"eventTabFlag": 0,
+            "badChannelExtra": 1,
+            "name": "ALPH",
+            "targetEvent": "1.9837",
+            "exactMatch": 1
+		}
+	},
+	"COV": {
+		"param": {
+			"inFolder": "open_source_a_raw/COV",
+			"outFolder": "open_source_b_rereferenced/COV/not_chan_reduced",
+			"fileType": "**/*.eeg",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "S\\s\\s\\d",
+			"endEventPattern": "S[12]\\d\\d",
+			"eventFileName": "COV_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 1
+		}
+	},
+	"AB": {
+		"param": {
+			"inFolder": "open_source_a_raw/AB",
+			"outFolder": "open_source_b_rereferenced/AB/not_chan_reduced",
+			"fileType": "**/*.bdf",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "61450",
+			"endEventPattern": ["61510", "61511"],
+			"eventFileName": "AB_event_codes.json",
+			"indexOfEvents": 10,
+			"numOfChannels": 64,
+			"renamingFlag": 0,
+			"eventTabFlag": 0,
+            "badChannelExtra": 1,
+            "name": "AB"
+		}
+	},
+	"B3": {
+		"param": {
+			"inFolder": "open_source_a_raw/B3",
+			"outFolder": "open_source_b_rereferenced/B3/not_chan_reduced",
+			"fileType": "**/*.set",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "S100",
+			"endEventPattern": "S\\s\\s[56]",
+			"eventFileName": "B3_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 0
+		}
+	},
+	"ENS": {
+		"param": {
+			"inFolder": "open_source_a_raw/ENS",
+			"outFolder": "open_source_b_rereferenced/ENS/not_chan_reduced",
+			"fileType": "**/*.eeg",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "S [29]0",
+			"endEventPattern": "S[12]\\d\\d",
+			"eventFileName": "ENS_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 0,
+			"skipPattern": "_[23]",
+			"stringToExtend": "1"
+		}
+	},
+	"JAZZ": {
+		"param": {
+			"inFolder": "open_source_a_raw/JAZZ",
+			"outFolder": "open_source_b_rereferenced/JAZZ/not_chan_reduced",
+			"fileType": "**/*.eeg",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "S\\s\\s[1-7]",
+			"endEventPattern": "S 12",
+			"eventFileName": "JAZZ_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 0
+		}
+	},
+	"REP": {
+		"param": {
+			"inFolder": "open_source_a_raw/REP",
+			"outFolder": "open_source_b_rereferenced/REP/not_chan_reduced",
+			"fileType": "**/*.eeg",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "",
+			"endEventPattern": "",
+			"eventFileName": "REP_event_codes.json",
+			"indexOfEvents": 14,
+			"renamingFlag": 0,
+			"eventTabFlag": 1
+		}
+	},
+	"TRAN": {
+		"param_exp1": {
+			"inFolder": "open_source_a_raw/TRAN/task/Exp_1",
+			"outFolder": "open_source_b_rereferenced/TRAN/not_chan_reduced/task/Exp_1",
+			"fileType": "**/*.edf",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "",
+			"endEventPattern": "",
+			"eventFileName": "TRAN_event_codes.json",
+			"indexOfEvents": 10,
+			"numOfChannels": 21,
+			"renamingFlag": 0,
+			"eventTabFlag": 1,
+			"stringToExtend": "exp1"
+		},
+		"param_exp2": {
+			"inFolder": "open_source_a_raw/TRAN/task/Exp_2",
+			"outFolder": "open_source_b_rereferenced/TRAN/not_chan_reduced/task/Exp_2",
+			"fileType": "**/*.edf",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "",
+			"endEventPattern": "",
+			"eventFileName": "TRAN_event_codes.json",
+			"indexOfEvents": 10,
+			"numOfChannels": 21,
+			"renamingFlag": 0,
+			"eventTabFlag": 1,
+			"stringToExtend": "exp2"
+		}
+	},
+	"TMS": {
+		"param": {
+			"inFolder": "open_source_a_raw/TMS",
+			"outFolder": "open_source_b_rereferenced/TMS/not_chan_reduced",
+			"fileType": "**/*.eeg",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "",
+			"endEventPattern": "",
+			"eventFileName": "TMS_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 1
+		}
+	},
+	"ABS": {
+		"param": {
+			"inFolder": "open_source_a_raw/ABS",
+			"outFolder": "open_source_b_rereferenced/ABS/not_chan_reduced",
+			"fileType": "**/*.eeg",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "",
+			"endEventPattern": "",
+			"eventFileName": "ABS_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 1
+		}
+	},
+	"SENS": {
+		"param": {
+			"inFolder": "open_source_a_raw/SENS",
+			"outFolder": "open_source_b_rereferenced/SENS/not_chan_reduced",
+			"fileType": "**/*.set",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "",
+			"endEventPattern": "",
+			"eventFileName": "SENS_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 1
+		}
+	},
+	"MICRO": {
+		"param": {
+			"inFolder": "open_source_a_raw/MICRO",
+			"outFolder": "open_source_b_rereferenced/MICRO/not_chan_reduced",
+			"fileType": "**/*.eeg",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "",
+			"endEventPattern": "",
+			"eventFileName": "MICRO_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 1
+		}
+	},
+	"COG": {
+		"param": {
+			"inFolder": "open_source_a_raw/COG",
+			"outFolder": "open_source_b_rereferenced/COG/not_chan_reduced",
+			"fileType": "**/*.rdf",
+			"regEpoch": 1,
+			"isDeltaUsed": 0,
+			"resampleRate": 250,
+			"startEventPattern": "355",
+			"endEventPattern": "^(\\d)?0$",
+			"eventFileName": "COG_event_codes.json",
+			"indexOfEvents": 10,
+			"renamingFlag": 0,
+			"eventTabFlag": 1
+		}
+	}
+}

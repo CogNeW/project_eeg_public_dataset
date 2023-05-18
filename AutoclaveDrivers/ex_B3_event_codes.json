@@ -1,0 +1,11 @@
+{
+	"start_events": [
+		"S100"
+	],
+	"end_events": [
+		"S  5",	
+		"S  6"
+	],
+	"unknown_events": [
+	]
+}
